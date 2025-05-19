@@ -7,96 +7,6 @@
 
     <!-- ============ STYLES ============ -->
     <style>
-        /* CLOUD */
-        svg[viewBox="100 100 900 400"] {
-            bottom: 0px;
-            width: 700px;
-            height: 250px;
-            position: absolute;
-            top: 20px;
-            left: -80px;
-        }
-
-        .cloud {
-            fill: #fff;
-            opacity: .9;
-            filter: url(#filter);
-            scale: .9;
-        }
-
-
-        /* SUN */
-        .sun {
-            width: 40rem;
-            height: 40rem;
-            position: absolute;
-            top: -240px;
-            left: -200px;
-            background: radial-gradient(transparent 50%, white), radial-gradient(yellow, transparent 70%);
-            -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
-            mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
-            border-radius: 50%;
-            scale: .3;
-            opacity: .9;
-
-            &::after,
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                transform-origin: center;
-                border-radius: 50%;
-                -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
-                mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
-            }
-
-            &::before {
-                background: repeating-conic-gradient(from 0deg, yellow 0deg 20deg, transparent 20deg 40deg);
-                animation: rotate 720s linear, scale 3s linear infinite;
-            }
-
-            &::after {
-                background: radial-gradient(yellow, orange 10%, transparent calc(30% + 1px) 100%), radial-gradient(gold, transparent 70%), repeating-conic-gradient(from 0deg, gold 0deg 5deg, transparent 5deg 10deg);
-                transform: rotate(15deg);
-                animation: rotate 360s linear;
-            }
-        }
-
-        @keyframes rotate {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes scale {
-            0% {
-                transform: scale(1);
-            }
-
-            20% {
-                transform: scale(1.2);
-            }
-
-            40% {
-                transform: scale(0.8);
-            }
-
-            60% {
-                transform: scale(1.1);
-            }
-
-            70% {
-                transform: scale(0.9);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -123,6 +33,18 @@
             border-radius: 20px;
             padding: 40px 35px;
             text-align: center;
+            opacity: 0;
+            animation: intro 2s linear 5s forwards;
+        }
+
+        @keyframes intro {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .search {
@@ -149,21 +71,56 @@
         .search button {
             border: 0;
             outline: none;
-            background: #ebfffc;
+            background: #ebfffc70;
             border-radius: 50%;
             width: 60px;
             height: 60px;
             cursor: pointer;
+            transition: all 0.3s ease-in-out;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            z-index: 1;
         }
 
-        .search button img {
+        .search button img#search {
+            width: 30px;
+            height: 30px;
+            scale: 1;
+            transition: all 0.3s ease-in-out;
             position: absolute;
-            width: 50px;
-            height: 50px;
+        }
+
+        .search button:hover img#search {
+            scale: 0;
+            z-index: 999;
+        }
+
+        .search button img#searchAfter {
+            width: 30px;
+            height: 30px;
+            scale: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .search button:hover img#searchAfter {
+            scale: 1;
+        }
+
+        .search button::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+            transition: all 0.3s ease-in-out;
+            scale: 0;
+            z-index: -1;
+        }
+
+        .search button:hover::after {
+            background: #040022;
+            scale: 1;
         }
 
         .weather-icon {
@@ -218,11 +175,318 @@
             font-size: 15px;
             display: none;
         }
+
+        #INFO {
+            position: absolute;
+            z-index: 9999;
+            font-size: x-large;
+            text-align: center;
+            text-transform: uppercase;
+            top: 50px;
+            right: 50px;
+            color: #abfffc;
+            opacity: 0;
+            text-shadow: 3px 3px 10px #00ff9d;
+            animation: infoIntro 6s ease-in-out forwards 8s;
+        }
+
+        @keyframes infoIntro {
+            0% {
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        #info-arrow path {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawArrow 5s 8s forwards ease-in-out;
+        }
+
+        @keyframes drawArrow {
+            0% {
+                stroke-dashoffset: 600;
+            }
+
+            40% {
+                stroke-dashoffset: 0;
+            }
+
+            80% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: 600;
+            }
+        }
+
+        #arrowhead {
+            animation: arrowFade 5s 8s forwards ease-in-out;
+            opacity: 0;
+            scale: 0;
+        }
+
+        @keyframes arrowFade {
+            0% {
+                opacity: 0;
+            }
+
+
+            10% {
+                opacity: 1;
+                scale: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0 !important;
+                scale: 0;
+            }
+        }
+
+
+        /* Loader */
+        @keyframes square-animation {
+            0% {
+                left: 0;
+                top: 0;
+            }
+
+            10.5% {
+                left: 0;
+                top: 0;
+            }
+
+            12.5% {
+                left: 32px;
+                top: 0;
+            }
+
+            23% {
+                left: 32px;
+                top: 0;
+            }
+
+            25% {
+                left: 64px;
+                top: 0;
+            }
+
+            35.5% {
+                left: 64px;
+                top: 0;
+            }
+
+            37.5% {
+                left: 64px;
+                top: 32px;
+            }
+
+            48% {
+                left: 64px;
+                top: 32px;
+            }
+
+            50% {
+                left: 32px;
+                top: 32px;
+            }
+
+            60.5% {
+                left: 32px;
+                top: 32px;
+            }
+
+            62.5% {
+                left: 32px;
+                top: 64px;
+            }
+
+            73% {
+                left: 32px;
+                top: 64px;
+            }
+
+            75% {
+                left: 0;
+                top: 64px;
+            }
+
+            85.5% {
+                left: 0;
+                top: 64px;
+            }
+
+            87.5% {
+                left: 0;
+                top: 32px;
+            }
+
+            98% {
+                left: 0;
+                top: 32px;
+            }
+
+            100% {
+                left: 0;
+                top: 0;
+            }
+        }
+
+        .loader {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            transform: rotate(45deg);
+            z-index: 9999;
+            animation: outro 3s linear forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes outro {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .loader h1 {
+            position: absolute;
+            top: 100%;
+            left: 25%;
+            color: #0d006c;
+            rotate: -45deg;
+            font-size: 40px;
+            z-index: inherit;
+            -webkit-text-stroke: .1vw #0d006c;
+            text-transform: uppercase;
+        }
+
+        .loader h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            color: #8fceff;
+            -webkit-text-stroke: .1vw #8fceff;
+            border-right: 2px solid #8fceff;
+            overflow: hidden;
+            animation: text-animation 2s ease-in-out forwards;
+        }
+
+        @keyframes text-animation {
+            from {
+                width: 0;
+                border-right: 2px solid #8fceff;
+            }
+
+            to {
+                width: 100%;
+                border-right: 0px solid #0d006c;
+            }
+        }
+
+        .loader-square {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 28px;
+            height: 28px;
+            margin: 2px;
+            border-radius: 0px;
+            background: #8fceff;
+            border: 1px solid rgba(255, 255, 255, .8);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            animation: square-animation 10s ease-in-out infinite both;
+        }
+
+        .loader-square:nth-of-type(0) {
+            animation-delay: 0s;
+        }
+
+        .loader-square:nth-of-type(1) {
+            animation-delay: -1.4285714286s;
+        }
+
+        .loader-square:nth-of-type(2) {
+            animation-delay: -2.8571428571s;
+        }
+
+        .loader-square:nth-of-type(3) {
+            animation-delay: -4.2857142857s;
+        }
+
+        .loader-square:nth-of-type(4) {
+            animation-delay: -5.7142857143s;
+        }
+
+        .loader-square:nth-of-type(5) {
+            animation-delay: -7.1428571429s;
+        }
+
+        .loader-square:nth-of-type(6) {
+            animation-delay: -8.5714285714s;
+        }
+
+        .loader-square:nth-of-type(7) {
+            animation-delay: -10s;
+        }
     </style>
     <title>Weather- - -finder</title>
 </head>
 
 <body>
+
+    <div class="loader">
+        <div class="loader-square"></div>
+        <div class="loader-square"></div>
+        <div class="loader-square"></div>
+        <div class="loader-square"></div>
+        <div class="loader-square"></div>
+        <div class="loader-square"></div>
+        <div class="loader-square"></div>
+        <h1 data-text="Welcome!">Welcome!</h1>
+    </div>
+
+    <div id="INFO">
+        <p>Enter the name of the city <br> you want to know the weather about</p>
+    </div>
+
+    <svg id="info-arrow" width="750" height="220"
+        style="position:absolute; top:110px; right:120px; pointer-events:none; z-index:9999;">
+        <path d="M 380,10
+           Q 320,120 220,120
+           Q 160,120 140,170
+           " stroke="#abfffc" stroke-width="4" fill="none" marker-end="url(#arrowhead)" />
+        <defs>
+            <marker id="arrowhead" markerWidth="16" markerHeight="16" refX="8" refY="8" orient="auto"
+                markerUnits="strokeWidth">
+                <path d="M2,2 L14,8 L2,14 Q5,8 2,2" fill="#abfffc" />
+            </marker>
+        </defs>
+    </svg>
 
     <div class="card">
         <div class="search">
