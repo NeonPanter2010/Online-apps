@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ============ STYLES ============ -->
+    <style>
+        /* CLOUD */
+        svg[viewBox="100 100 900 400"] {
+            bottom: 0px;
+            width: 700px;
+            height: 250px;
+            position: absolute;
+            top: 20px;
+            left: -80px;
+        }
+
+        .cloud {
+            fill: #fff;
+            opacity: .9;
+            filter: url(#filter);
+            scale: .9;
+        }
+
+
+        /* SUN */
+        .sun {
+            width: 40rem;
+            height: 40rem;
+            position: absolute;
+            top: -240px;
+            left: -200px;
+            background: radial-gradient(transparent 50%, white), radial-gradient(yellow, transparent 70%);
+            -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
+            mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
+            border-radius: 50%;
+            scale: .3;
+            opacity: .9;
+
+            &::after,
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                transform-origin: center;
+                border-radius: 50%;
+                -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
+                mask-image: radial-gradient(rgba(0, 0, 0, 1.0) 40%, transparent 65%);
+            }
+
+            &::before {
+                background: repeating-conic-gradient(from 0deg, yellow 0deg 20deg, transparent 20deg 40deg);
+                animation: rotate 720s linear, scale 3s linear infinite;
+            }
+
+            &::after {
+                background: radial-gradient(yellow, orange 10%, transparent calc(30% + 1px) 100%), radial-gradient(gold, transparent 70%), repeating-conic-gradient(from 0deg, gold 0deg 5deg, transparent 5deg 10deg);
+                transform: rotate(15deg);
+                animation: rotate 360s linear;
+            }
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes scale {
+            0% {
+                transform: scale(1);
+            }
+
+            20% {
+                transform: scale(1.2);
+            }
+
+            40% {
+                transform: scale(0.8);
+            }
+
+            60% {
+                transform: scale(1.1);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #040022, #0d006c, #046672);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 90%;
+            max-width: 470px;
+            background: linear-gradient(135deg, #00feba, #5b548a);
+            color: #fff;
+            border-radius: 20px;
+            padding: 40px 35px;
+            text-align: center;
+        }
+
+        .search {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search input {
+            border: 0;
+            outline: none;
+            background: #abfffc;
+            color: #555;
+            padding: 14px 25px;
+            height: 65px;
+            border-radius: 30px;
+            flex: 1;
+            margin-right: 16px;
+            font-size: 18px;
+            z-index: 1;
+        }
+
+        .search button {
+            border: 0;
+            outline: none;
+            background: #ebfffc;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+        }
+
+        img[alt="search"] {
+            width: 20px;
+        }
+
+        .weather-icon {
+            width: 100px;
+            margin-top: 30px;
+        }
+
+        .weather h1 {
+            font-size: 80px;
+            font-weight: 500;
+        }
+
+        .weather h2 {
+            font-size: 45px;
+            font-weight: 400;
+            margin-top: -10px;
+        }
+
+        .details {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            margin-top: 50px;
+        }
+
+        .col {
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .col img {
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        .humidity,
+        .wind {
+            font-size: 28px;
+            margin-top: -6px;
+        }
+
+        .weather {
+            display: none;
+        }
+
+        .error {
+            text-align: left;
+            margin-left: 10px;
+            margin-top: 30px;
+            font-size: 15px;
+            display: none;
+        }
+    </style>
+    <title>Weather- - -finder</title>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false" />
+            <button><img src="./images/search.png" alt="search"></button>
+        </div>
+        <div class="error">
+            <p>Envalid city name</p>
+        </div>
+
+        <div class="weather">
+            <img src="./images/rain.png" alt="WEATHER" class="weather-icon">
+            <h1 class="temp">22℃</h1>
+            <h2 class="city">New-York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="./images/humidity.png" alt="Humidity">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="./images/wind.png" alt="Wind">
+                    <div>
+                        <p class="wind">15 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ JS - code ============ -->
+    <script>
+        const apiKey = "a6b4f06ee53bda97f4cb8537e324d4fb";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+
+        async function checkWeather(city) {
+            const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+            if (response.status == 404) {
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+                return;
+            } else {
+                var data = await response.json();
+
+                document.querySelector(".city").innerHTML = data.sys.country + ", " + data.name;
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+                if (data.weather[0].main == "Clouds") {
+                    weatherIcon.src = "images/clouds.png";
+                } else if (data.weather[0].main == "Clear") {
+                    weatherIcon.src = "images/clear.png";
+                } else if (data.weather[0].main == "Rain") {
+                    weatherIcon.src = "images/rain.png";
+                } else if (data.weather[0].main == "Drizzle") {
+                    weatherIcon.src = "images/drizzle.png";
+                } else if (data.weather[0].main == "Mist") {
+                    weatherIcon.src = "images/mist.png";
+                } else if (data.weather[0].main == "Snow") {
+                    weatherIcon.src = "images/snow.png";
+                }
+
+                document.querySelector(".weather").style.display = "block";
+                document.querySelector(".error").style.display = "none";
+            }
+        }
+
+        searchBtn.addEventListener("click", () => {
+
+            checkWeather(searchBox.value);
+            searchBox.value = "";
+        }
+        );
+
+        searchBox.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                checkWeather(searchBox.value);
+                searchBox.value = "";
+            }
+        });
+    </script>
+</body>
+
+</html>
